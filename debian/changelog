@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.2.42) lmn72; urgency=medium
+
+  * [ldapconnector] Introduce new writers
+  * [ldapconnector] Optimize requests time 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 03 Nov 2024 11:00:21 +0100
+
 linuxmuster-tools7 (7.2.41) lmn72; urgency=medium
 
   * [ldapreader] Refactor with common parent methods

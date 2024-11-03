@@ -177,6 +177,22 @@ class LdapConnector:
         ldif.append(('objectclass', [b'top', b'group']))
         self._add(dn, ldif)
 
+    def _move(self, dn, new_dn):
+        """
+        Move (or "rename") an entry to a new OU.
+
+        :param dn: actual dn to move
+        :type dn: basestring
+        :param new_dn: new destination dn
+        :type new_dn: basestring
+        """
+
+
+        conn, _ = self._connect()
+
+        conn.rename_s(dn, dn.split(',')[0], new_dn)
+        conn.unbind_s()
+
     def _del(self, dn):
         """
         Connect to ldap and delete the object with the given dn.
