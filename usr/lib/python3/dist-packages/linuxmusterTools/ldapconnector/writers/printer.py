@@ -25,7 +25,7 @@ class LMNPrinterWriter:
 
         self.lw._setattr(details, **kwargs)
 
-     def delattr_printer(self, name, **kwargs):
+    def delattr(self, name, **kwargs):
         """
         Middleware to check if the object exists.
 
