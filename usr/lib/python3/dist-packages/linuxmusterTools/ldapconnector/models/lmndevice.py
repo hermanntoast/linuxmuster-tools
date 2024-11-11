@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from .common import LMNParent
 
 
@@ -24,3 +24,7 @@ class LMNDevice(LMNParent):
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
     sophomorixStatus: str
+    dn:   str = field(init=False)
+
+    def __post_init__(self):
+        self.dn = self.distinguishedName
