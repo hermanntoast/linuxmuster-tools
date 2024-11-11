@@ -44,6 +44,47 @@ class LMNDeviceWriter:
 
         self.lw._delattr(details, **kwargs)
 
+    def rename(self, name, new_name):
+        """
+        Rename a device inside a room.
+
+        :param new_name:
+        :type new_name:
+        :return:
+        :rtype:
+        """
+
+
+        new_name = new_name.upper()
+        name = name.upper()
+
+        details = self.lr.get(f'/devices/{name}')
+
+        if not details:
+            logging.warning(f"Device {name} not found in ldap, doing nothing.")
+            return
+
+        # Check if new_name is already used
+        if self.lr.get(f'/devices/{new_name}'):
+            logging.warning(f"{new_name} is already used, please use another hostname.")
+            return
+
+        # TODO : check new_name chars ?
+
+        # Update attributes
+
+        data = {
+            "displayName": f"Computer {new_name}",
+            "dNSHostName": details["dNSHostName"].replace(name, new_name),
+            "sAMAccountName": details["sAMAccountName"].replace(name, new_name),
+            "servicePrincipalName": [spn.replace(name, new_name) for spn in details["servicePrincipalName"]],
+            "sophomorixDnsNodename": new_name.lower()
+        }
+
+        self.setattr(name, data=data)
+
+        self.lw._rename(details['dn'], new_name)
+
     def move(self, name, new_room):
         """
         Move a device to another room, e.g. to another OU
