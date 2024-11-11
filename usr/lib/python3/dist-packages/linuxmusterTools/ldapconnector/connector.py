@@ -177,7 +177,7 @@ class LdapConnector:
         ldif.append(('objectclass', [b'top', b'group']))
         self._add(dn, ldif)
 
-    def _move(self, dn, new_dn):
+    def _move(self, old_dn, new_dn):
         """
         Move (or "rename") an entry to a new OU.
 
@@ -190,7 +190,7 @@ class LdapConnector:
 
         conn, _ = self._connect()
 
-        conn.rename_s(dn, dn.split(',')[0], new_dn)
+        conn.rename_s(old_dn, old_dn.split(',')[0], new_dn)
         conn.unbind_s()
 
     def _del(self, dn):
