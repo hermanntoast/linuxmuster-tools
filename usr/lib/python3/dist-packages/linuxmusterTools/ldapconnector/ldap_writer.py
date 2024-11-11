@@ -115,7 +115,20 @@ class LdapWriter:
         if ldif:
             self.lc._set(obj_details['distinguishedName'], ldif)
 
-    def _move(self, old_dn, new_dn):
+    def _rename(self, old_dn, new_cn):
+        """
+
+        :param old_dn:
+        :type old_dn:
+        :param new_cn:
+        :type new_cn:
+        :return:
+        :rtype:
+        """
+
+        self.lc._rename(old_dn, new_cn)
+
+    def _move(self, old_dn, new_ou):
         """
 
         :param old_dn:
@@ -126,7 +139,7 @@ class LdapWriter:
         :rtype:
         """
 
-        self.lc._move(old_dn, new_dn)
+        self.lc._move(old_dn, new_ou)
 
 
 ldap_writer = LdapWriter()
