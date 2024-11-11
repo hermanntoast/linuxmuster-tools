@@ -7,12 +7,14 @@ class LMNDevice(LMNParent):
     cn: str
     displayName: str
     distinguishedName: str
+    dNSHostName: str
     memberOf: list
     name: str
     objectClass: list
     proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str
+    servicePrincipalName: list
     sophomorixAdminClass: str
     sophomorixAdminFile: str
     sophomorixComment: str
@@ -20,6 +22,7 @@ class LMNDevice(LMNParent):
     sophomorixComputerMAC: str
     sophomorixComputerRoom: str
     sophomorixCreationDate: str
+    sophomorixDnsNodename: str
     sophomorixRole: str
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
