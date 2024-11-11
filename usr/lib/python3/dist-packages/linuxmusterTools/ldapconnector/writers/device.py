@@ -2,12 +2,15 @@ import logging
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
+from .object import LMNObjectWriter
+
 
 class LMNDeviceWriter:
 
     def __init__(self):
         self.lw = LdapWriter()
         self.lr = router
+        self.ow = LMNObjectWriter()
 
     def setattr(self, name, **kwargs):
         """
@@ -40,3 +43,50 @@ class LMNDeviceWriter:
             raise Exception(f"The device {name} was not found in ldap.")
 
         self.lw._delattr(details, **kwargs)
+
+    def move(self, name, new_room):
+        """
+        Move a device to another room, e.g. to another OU
+
+        :param new_ou:
+        :type new_ou:
+        :return:
+        :rtype:
+        """
+
+
+        name = name.upper()
+
+        details = self.lr.get(f'/devices/{name}')
+
+        if not details:
+            logging.warning(f"Device {name} not found in ldap, doing nothing.")
+            return
+
+        # Build new parent OU
+        dn_splitted = details['dn'].split(',')
+        old_room = dn_splitted[1].split('=')[1]
+        ou_prefix = ','.join(dn_splitted[:2])
+
+        new_ou = details['dn'].replace(f"{ou_prefix},", f"OU={new_room},")
+        new_dn = f"CN={name},{new_ou}"
+
+        # Move to new OU
+        self.lw._move(details['dn'], new_ou)
+
+        # Update attributes
+
+        data = {
+            "sophomorixAdminClass": new_room,
+            "sophomorixComputerRoom": new_room,
+        }
+        self.setattr(name, data=data)
+
+        # Update membership
+
+        old_group = details['dn'].replace(f"CN={name},", f"CN={old_room},")
+        new_group = new_dn.replace(f"CN={name},", f"CN={new_room},")
+
+        self.ow.remove_member(old_group, new_dn)
+        self.ow.add_member(new_group, new_dn)
+
