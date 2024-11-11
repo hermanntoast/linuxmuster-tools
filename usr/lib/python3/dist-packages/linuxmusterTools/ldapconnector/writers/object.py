@@ -57,3 +57,17 @@ class LMNObjectWriter:
             self.lw._setattr(details, data={'member': members})
         except ValueError as e:
             logging.warning(f"Could not remove member {member_dn} from {dn}: {str(e)}")
+
+    def add_member(self, dn, member_dn):
+        details = self.lr.get(f'/dn/{dn}')
+
+        if not details:
+            logging.info(f"The object {dn} was not found in ldap.")
+            raise Exception(f"The object {dn} was not found in ldap.")
+
+        try:
+            members = details['member']
+            members.append(member_dn)
+            self.lw._setattr(details, data={'member': members})
+        except Exception as e:
+            logging.warning(f"Could not append member {member_dn} to {dn}: {str(e)}")
