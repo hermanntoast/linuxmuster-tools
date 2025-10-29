@@ -99,7 +99,7 @@ class LMNSchoolclassGroup(LMNGroupCommon):
             for student in self.schoolclass_data['sophomorixMembers']:
                 parents_dn = self.lr.getval(f'/units/{student}-parents', 'member')
                 if parents_dn:
-                    members = parents_dn
+                    members += parents_dn
 
         elif self.type == 'teachers':
             for member_dn in self.schoolclass_data['member']:
